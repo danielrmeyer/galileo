@@ -23,4 +23,19 @@ class DerivativeTest extends FunSuite {
 		val fd = Derivative( f, x )
 		assert( fd.visit().simplify.toString == "(x*cos(x)-2.0*sin(x))/x^3.0" )
 	}
+
+	test( "implicit function" ) {
+		val t = Variable("t")
+		val x: Expr = ImplicitFunc1("x", t)
+		val expr: Expr = Product(List(x, t))
+
+		println(expr)
+		println(expr.derive(t))
+
+		val xSubstitute: Expr = Sum(Power(t, Number(2)), Product(List(Number(3), t)), Number(5))
+
+		expr.derive(t).substitute(Map(ImplicitFunc1("x", t) -> xSubstitute))
+
+		assert(true, "foobar") //TODO make this an actual test
+	}
 }

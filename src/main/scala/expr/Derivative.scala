@@ -3,6 +3,7 @@ package galileo.expr
 import galileo.environment.Environment
 import galileo.expr._
 import galileo.trigonometry._
+import galileo.expr.ImplicitFunc1
 import galileo.linalg.Matrix
 import galileo.tensor.Tensor
 
@@ -57,6 +58,8 @@ case class Derivative( y:Expr, x:Expr ) extends Expr {
 			Product( e, Power( o, Sum( e, Number( -1 ) ) ), Derivative( o, b ) ),
 			Product( Derivative( e, b ), Power( o, e ) )
 		).visit()
+		// Handle ImplicitFuncF1 for chain rule
+		case (ImplicitFunc1(name, e), b) if e.variables.contains(b) => Product(List(Derivative(e, b), Derivative(Variable(name), e))).visit()
 		// Chain Rule
 		/*
 		case (_,e:Expr) => {
